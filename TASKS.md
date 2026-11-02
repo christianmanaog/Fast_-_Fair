@@ -34,16 +34,16 @@ Your job is to turn every red one green without breaking a green one.
 Files: `app/static/index.html` and `app/static/styles.css`
 Check with: `pytest tests/test_accessibility.py tests/test_performance.py`
 
-- [ ] **TASK 1 — Perceivable.** Add `lang` to `<html>`, a real `<title>`, and
+- [x] **TASK 1 — Perceivable.** Add `lang` to `<html>`, a real `<title>`, and
       `alt` text on both images.
-- [ ] **TASK 2 — Structure & controls.** Make the content a `<main>` landmark,
+- [x] **TASK 2 — Structure & controls.** Make the content a `<main>` landmark,
       fix the heading levels so they don't skip (h1 → h2, not h1 → h3), and turn
       the fake `<div class="btn">` into a real `<button>`.
-- [ ] **TASK 3 — Labels.** Replace the `<span class="fake-label">` text with real
+- [x] **TASK 3 — Labels.** Replace the `<span class="fake-label">` text with real
       `<label for="...">` tied to each input's `id`.
-- [ ] **TASK 4 — Contrast.** In `styles.css`, darken `--ink` and `--brand` until
+- [x] **TASK 4 — Contrast.** In `styles.css`, darken `--ink` and `--brand` until
       both contrast tests pass (WCAG AA = 4.5:1).
-- [ ] **TASK 5 — Performance.** `defer` the script, add `width`/`height` to both
+- [x] **TASK 5 — Performance.** `defer` the script, add `width`/`height` to both
       images, and `loading="lazy"` to the content image.
 
 ## Part B — Ship it on a pipeline (Week 17)
@@ -51,8 +51,8 @@ Check with: `pytest tests/test_accessibility.py tests/test_performance.py`
 File: `.github/workflows/ci.yml`
 Check with: `pytest tests/test_pipeline.py`
 
-- [ ] **TASK 6 — Triggers.** Run the workflow on `push` and `pull_request` to `main`.
-- [ ] **TASK 7 — The job.** One `test` job on `ubuntu-latest` that checks out the
+- [x] **TASK 6 — Triggers.** Run the workflow on `push` and `pull_request` to `main`.
+- [x] **TASK 7 — The job.** One `test` job on `ubuntu-latest` that checks out the
       code, sets up Python, installs `requirements.txt`, and runs `pytest`.
 
 When all three suites pass locally, run the whole thing once more:
@@ -86,5 +86,10 @@ you **Approve** or **Request changes**.
 
 1. Which accessibility fix would a sighted mouse user never notice but a
    screen-reader or keyboard user depends on? Why?
+
+   Replacing the fake `<div class="btn">` with a native `<button type="submit">` (and pairing explicit `<label for="...">` tags with input IDs) is virtually invisible to a sighted mouse user because custom CSS styles them identically. However, keyboard users cannot navigate to or activate a `<div>` using Tab and Enter/Space without manual accessibility wiring, and screen readers fail to announce its interactive role or name. Native semantic elements automatically provide built-in keyboard navigation, state management, and accessibility tree exposure that assistive technology relies on.
+
 2. Your pipeline runs the Week 16 checks automatically now. How does that stop a
    teammate from *accidentally* shipping an inaccessible page six weeks from now?
+
+   By running the automated accessibility and performance test suites on every `push` and `pull_request` targeting `main`, CI serves as an objective quality gate. If a teammate later adds an unlabeled input, omits image dimensions, or introduces low-contrast styles, pytest fails immediately in the runner. Because repository branch protection rules block pull requests with failing checks, regressions are caught and resolved before inaccessible code can ever merge into production.
